@@ -10,9 +10,48 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Doctor Appointment App',
       theme: ThemeData(
+        primaryColor: Colors.lightBlue,
         primarySwatch: Colors.blue,
+        //backgroundColor: Colors.lightBlue,
       ),
-      home: MyHomePage(),
+      home: SplashScreenWrapper(),
+    );
+  }
+}
+
+class SplashScreenWrapper extends StatefulWidget {
+  @override
+  _SplashScreenWrapperState createState() => _SplashScreenWrapperState();
+}
+
+class _SplashScreenWrapperState extends State<SplashScreenWrapper> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MyHomePage()),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Doctor Appointment App',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            CircularProgressIndicator(), // Replace with your splash screen content
+          ],
+        ),
+      ),
     );
   }
 }
@@ -22,7 +61,19 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Doctor Appointment'),
+        backgroundColor: Colors.lightBlue,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              // Navigate to settings page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -90,7 +141,8 @@ class UserTypeSelection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Type Selection'),
+        backgroundColor: Colors.blueGrey,
+        title: Text('Log In Page'),
       ),
       body: Center(
         child: Column(
@@ -101,28 +153,27 @@ class UserTypeSelection extends StatelessWidget {
                 if (isDoctor) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DoctorProfileCreation()),
+                    MaterialPageRoute(builder: (context) => DoctorLoginPage()),
                   );
                 } else {
-                  // Handle user selection as a patient
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PatientSignUp()), // Navigate to PatientSignUp
-                  );
+                  // Handle Patient Log In
                 }
               },
-              child: Text(isDoctor ? 'Doctor Sign Up' : 'Doctor Log In'),
+              child: Text(isDoctor ? 'Doctor Log In' : 'Patient Log In'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Handle user selection as a patient
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PatientLogIn()), // Navigate to PatientLogIn
-                );
+                if (isDoctor) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DoctorSignUpPage()),
+                  );
+                } else {
+                  // Handle Patient Sign Up
+                }
               },
-              child: Text(isDoctor ? 'Patient Sign Up' : 'Patient Log In'),
+              child: Text(isDoctor ? 'Doctor Sign Up' : 'Patient Sign Up'),
             ),
           ],
         ),
@@ -131,107 +182,87 @@ class UserTypeSelection extends StatelessWidget {
   }
 }
 
-class DoctorProfileCreation extends StatefulWidget {
+class SettingsPage extends StatefulWidget {
   @override
-  _DoctorProfileCreationState createState() => _DoctorProfileCreationState();
+  _SettingsPageState createState() => _SettingsPageState();
 }
 
-class _DoctorProfileCreationState extends State<DoctorProfileCreation> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController doctorNameController = TextEditingController();
-  final TextEditingController collegeController = TextEditingController();
-  final TextEditingController registrationNoController = TextEditingController();
-  String? category; // Initialize as nullable
+class _SettingsPageState extends State<SettingsPage> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 100),
+    );
+    _offsetAnimation = Tween<Offset>(
+      begin: Offset(0.0, 0.0),
+      end: Offset(0.0, 0.0),
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOutBack,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Doctor Profile'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextFormField(
-                controller: doctorNameController,
-                decoration: InputDecoration(labelText: 'Doctor Name'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter doctor name';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: collegeController,
-                decoration: InputDecoration(labelText: 'College'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter college';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: registrationNoController,
-                decoration: InputDecoration(labelText: 'Registration No.'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter registration number';
-                  }
-                  return null;
-                },
-              ),
-              Container(
-                // Wrap DropdownButtonFormField with Container for fixed height
-                height: 60,
-                child: DropdownButtonFormField(
-                  decoration: InputDecoration(labelText: 'Category'),
-                  value: category,
-                  items: ['Medicine', 'Dermatology', 'Others'].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      category = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select category';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    category = value;
-                  },
-                ),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Process doctor profile creation
-                    // For demonstration, print the values
-                    print('Doctor Name: ${doctorNameController.text}');
-                    print('College: ${collegeController.text}');
-                    print('Registration No.: ${registrationNoController.text}');
-                    print('Category: $category');
 
-                    // Navigate to the previous page
-                    Navigator.pop(context);
-                  }
-                },
-                child: Text('Create Profile'),
-              ),
-            ],
+        backgroundColor: Colors.lightBlue,
+        title: Text("Settings"),
+      ),
+      body: Center(
+        child: SlideTransition(
+          position: _offsetAnimation,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.blue.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle "Rate this app" action
+                  },
+                  child: Text('Rate this app'),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle "Feedback" action
+                  },
+                  child: Text('Remove Ads'),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle "Feedback" action
+                  },
+                  child: Text('Feedback'),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle "Feedback" action
+                  },
+                  child: Text('Devoloper Info'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -239,73 +270,39 @@ class _DoctorProfileCreationState extends State<DoctorProfileCreation> {
   }
 }
 
-class PatientSignUp extends StatefulWidget {
-  @override
-  _PatientSignUpState createState() => _PatientSignUpState();
-}
-
-class _PatientSignUpState extends State<PatientSignUp> {
+class DoctorLoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Patient Sign Up'),
+        backgroundColor: Colors.blueGrey,
+        title: Text('Doctor Log In'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Add your patient sign up form fields and logic here
-            Text('Patient Sign Up Form'),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class PatientLogIn extends StatefulWidget {
-  @override
-  _PatientLogInState createState() => _PatientLogInState();
-}
-
-class _PatientLogInState extends State<PatientLogIn> {
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Patient Log In'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TextFormField(
-              controller: usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
+            TextField(
+              decoration: InputDecoration(
+<<<<<<< HEAD
+                labelText: 'Email',
+=======
+                labelText: 'Phone Number',
+>>>>>>> origin/master
+              ),
             ),
-            TextFormField(
-              controller: passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Password',
+              ),
               obscureText: true,
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () async {
-                bool loginSuccess = await ApiService.login(usernameController.text, passwordController.text);
-                if (loginSuccess) {
-                  // Navigate to the next screen upon successful login
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
-                } else {
-                  // Show error message or handle login failure
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login failed')));
-                }
+              onPressed: () {
+                // Handle Doctor Log In
               },
-              child: Text('Login'),
+              child: Text('Log In'),
             ),
           ],
         ),
@@ -314,29 +311,48 @@ class _PatientLogInState extends State<PatientLogIn> {
   }
 }
 
-// Define an API service class
-class ApiService {
-  static Future<bool> login(String username, String password) async {
-    // Make API call to authenticate user
-    // You can use packages like http or dio for making HTTP requests
-    // Return true if login is successful, false otherwise
-    return true; // Placeholder response
-  }
-}
-
-class HomeScreen extends StatelessWidget {
+class DoctorSignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        backgroundColor: Colors.blueGrey,
+        title: Text('Doctor Sign Up'),
       ),
       body: Center(
-        child: Text('Welcome to Home Screen!'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Name',
+              ),
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Registration Number',
+              ),
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Specialist',
+              ),
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Chamber/Location',
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Handle Doctor Sign Up
+              },
+              child: Text('Sign Up'),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
-
-

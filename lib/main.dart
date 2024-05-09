@@ -12,7 +12,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.lightBlue,
         primarySwatch: Colors.blue,
-        //backgroundColor: Colors.lightBlue,
       ),
       home: SplashScreenWrapper(),
     );
@@ -48,7 +47,7 @@ class _SplashScreenWrapperState extends State<SplashScreenWrapper> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
-            CircularProgressIndicator(), // Replace with your splash screen content
+            CircularProgressIndicator(),
           ],
         ),
       ),
@@ -66,7 +65,6 @@ class MyHomePage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.settings),
             onPressed: () {
-              // Navigate to settings page
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SettingsPage()),
@@ -217,7 +215,6 @@ class _SettingsPageState extends State<SettingsPage> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         backgroundColor: Colors.lightBlue,
         title: Text("Settings"),
       ),
@@ -236,14 +233,18 @@ class _SettingsPageState extends State<SettingsPage> with SingleTickerProviderSt
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Handle "Rate this app" action
+                    // Navigate to the rating screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RatingPage()),
+                    );
                   },
                   child: Text('Rate this app'),
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    // Handle "Feedback" action
+                    // Handle "Remove Ads" action
                   },
                   child: Text('Remove Ads'),
                 ),
@@ -257,13 +258,71 @@ class _SettingsPageState extends State<SettingsPage> with SingleTickerProviderSt
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    // Handle "Feedback" action
+                    // Handle "Developer Info" action
                   },
-                  child: Text('Devoloper Info'),
+                  child: Text('Developer Info'),
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class RatingPage extends StatefulWidget {
+  @override
+  _RatingPageState createState() => _RatingPageState();
+}
+
+class _RatingPageState extends State<RatingPage> {
+  int _rating = 0;
+
+  void _onRatingChanged(int newRating) {
+    setState(() {
+      _rating = newRating;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Rate this app'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Rate the app:',
+              style: TextStyle(fontSize: 20.0),
+            ),
+            SizedBox(height: 20.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                for (int i = 1; i <= 5; i++)
+                  IconButton(
+                    icon: Icon(
+                      i <= _rating ? Icons.star : Icons.star_border,
+                      color: Colors.yellow,
+                    ),
+                    onPressed: () => _onRatingChanged(i),
+                  ),
+              ],
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Handle submit action
+                // For example, you can send the rating to a backend server
+                // and then navigate back to the previous screen
+                Navigator.pop(context);
+              },
+              child: Text('Submit'),
+            ),
+          ],
         ),
       ),
     );
@@ -284,11 +343,7 @@ class DoctorLoginPage extends StatelessWidget {
           children: <Widget>[
             TextField(
               decoration: InputDecoration(
-<<<<<<< HEAD
-                labelText: 'Email',
-=======
                 labelText: 'Phone Number',
->>>>>>> origin/master
               ),
             ),
             TextField(
@@ -341,6 +396,26 @@ class DoctorSignUpPage extends StatelessWidget {
             TextField(
               decoration: InputDecoration(
                 labelText: 'Chamber/Location',
+              ),
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'About',
+              ),
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Phone Number / Email',
+              ),
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Password',
+              ),
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Repeat Password',
               ),
             ),
             SizedBox(height: 20),

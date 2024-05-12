@@ -154,7 +154,10 @@ class UserTypeSelection extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => DoctorLoginPage()),
                   );
                 } else {
-                  // Handle Patient Log In
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PatientLoginPage()),
+                  );
                 }
               },
               child: Text(isDoctor ? 'Doctor Log In' : 'Patient Log In'),
@@ -168,7 +171,10 @@ class UserTypeSelection extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => DoctorSignUpPage()),
                   );
                 } else {
-                  // Handle Patient Sign Up
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PatientSignUpPage()),
+                  );
                 }
               },
               child: Text(isDoctor ? 'Doctor Sign Up' : 'Patient Sign Up'),
@@ -337,7 +343,8 @@ class DoctorLoginPage extends StatelessWidget {
         backgroundColor: Colors.blueGrey,
         title: Text('Doctor Log In'),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -346,6 +353,7 @@ class DoctorLoginPage extends StatelessWidget {
                 labelText: 'Phone Number',
               ),
             ),
+            SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
                 labelText: 'Password',
@@ -353,6 +361,7 @@ class DoctorLoginPage extends StatelessWidget {
               obscureText: true,
             ),
             SizedBox(height: 20),
+
             ElevatedButton(
               onPressed: () {
                 // Handle Doctor Log In
@@ -374,58 +383,170 @@ class DoctorSignUpPage extends StatelessWidget {
         backgroundColor: Colors.blueGrey,
         title: Text('Doctor Sign Up'),
       ),
-      body: Center(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Full Name',
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Registration Number',
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Specialist',
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Chamber/Location',
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'About',
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Phone Number / Email',
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                ),
+                obscureText: true,
+              ),
+              SizedBox(height: 20),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Repeat Password',
+                ),
+                obscureText: true,
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Handle Doctor Sign Up
+                },
+                child: Text('Sign Up'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+class PatientLoginPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blueGrey,
+        title: Text('Patient Log In'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             TextField(
               decoration: InputDecoration(
-                labelText: 'Name',
+                labelText: 'Email or Phone Number',
               ),
             ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Registration Number',
-              ),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Specialist',
-              ),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Chamber/Location',
-              ),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'About',
-              ),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Phone Number / Email',
-              ),
-            ),
+            SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
                 labelText: 'Password',
               ),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Repeat Password',
-              ),
+              obscureText: true,
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Handle Doctor Sign Up
+                // Handle Patient Log In
               },
-              child: Text('Sign Up'),
+              child: Text('Log In'),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class PatientSignUpPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blueGrey,
+        title: Text('Patient Sign Up'),
+      ),
+      body: Center( // Wrap with Center widget
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Full Name',
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Phone Number',
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                  ),
+                  obscureText: true,
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Repeat Password',
+                  ),
+                  obscureText: true,
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle Patient Sign Up
+                  },
+                  child: Text('Sign Up'),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

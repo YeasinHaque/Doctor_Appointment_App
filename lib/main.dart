@@ -250,9 +250,13 @@ class _SettingsPageState extends State<SettingsPage> with SingleTickerProviderSt
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    // Handle "Remove Ads" action
+                    // Navigate to the Support and Help screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SupportAndHelpPage()),
+                    );
                   },
-                  child: Text('Remove Ads'),
+                  child: Text('Support and Help'),
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
@@ -291,11 +295,42 @@ class _RatingPageState extends State<RatingPage> {
     });
   }
 
+  void _onHelpSelected(String choice) {
+    switch (choice) {
+      case 'FAQ':
+      // Navigate to FAQ page or show FAQ content
+        print('FAQ selected');
+        break;
+      case 'User Guide':
+      // Navigate to User Guide page or show User Guide content
+        print('User Guide selected');
+        break;
+      case 'Support Forum':
+      // Navigate to Support Forum page or show Support Forum content
+        print('Support Forum selected');
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Rate this app'),
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: _onHelpSelected,
+            itemBuilder: (BuildContext context) {
+              return {'FAQ', 'User Guide', 'Support Forum'}
+                  .map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -335,6 +370,49 @@ class _RatingPageState extends State<RatingPage> {
   }
 }
 
+class SupportAndHelpPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.lightBlue,
+        title: Text('Support and Help'),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'For support and help, contact us at:',
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Email: supportyeasindoctorappointmentapp@gmail.com',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Phone: 017**********',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Handle additional support options, such as opening an email client
+                },
+                child: Text('Contact Support'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class DoctorLoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -361,7 +439,6 @@ class DoctorLoginPage extends StatelessWidget {
               obscureText: true,
             ),
             SizedBox(height: 20),
-
             ElevatedButton(
               onPressed: () {
                 // Handle Doctor Log In
@@ -452,6 +529,7 @@ class DoctorSignUpPage extends StatelessWidget {
     );
   }
 }
+
 class PatientLoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -499,7 +577,7 @@ class PatientSignUpPage extends StatelessWidget {
         backgroundColor: Colors.blueGrey,
         title: Text('Patient Sign Up'),
       ),
-      body: Center( // Wrap with Center widget
+      body: Center(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),

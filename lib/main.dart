@@ -558,7 +558,10 @@ class PatientLoginPage extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Handle Patient Log In
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PatientHomePage()),
+                );
               },
               child: Text('Log In'),
             ),
@@ -624,6 +627,63 @@ class PatientSignUpPage extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PatientHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Patient Home'),
+        leading: IconButton(
+          icon: Icon(Icons.settings),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SettingsPage()),
+            );
+          },
+        ),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to Doctor List
+                },
+                child: Text('Doctor List'),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to Book a Doctor
+                },
+                child: Text('Book a Doctor'),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to Investigation
+                },
+                child: Text('Investigation'),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to Health Package
+                },
+                child: Text('Health Package'),
+              ),
+            ],
           ),
         ),
       ),
